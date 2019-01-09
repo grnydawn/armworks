@@ -66,12 +66,13 @@ numpy
 			vecparsed@py = sveparsed[vecname]
 			[for vlen in ("10", "100", "1000")]
 				veclen@py = vecparsed[vlen]
-				xlabels@py = sorted(veclen)
+				xlabels@py = numpy.asarray(sorted(veclen))
 				data@py = []
 				[for testname in xlabels]
 					_@py = data.append(veclen[testname][0])
 				[end]
 				[append]
+					data@py = numpy.asarray(data)
 					_@py = plotdata.update( {{svename+vecname+vlen: data}} )
 
 			[end]
@@ -104,20 +105,39 @@ numpy
 
 	[sorted]
 		[for vlen, vcolor1, vcolor2 in (("10","red","pink"), ("100","blue","lightblue"), ("1000","green","lightgreen"))]
+		#[for vlen, vcolor1, vcolor2 in (("10","red","pink"), )]
+			nloops@py = len(xlabels)
 			x@py = numpy.arange(len(xlabels))
 			w@py = 0.3
 			s@py = 0.0
 			fontsize@py = 18
 			labels@py = [('nosvenovec{vlen}','novec{vlen}','{vcolor1}'), ('nosvevec{vlen}','vec{vlen}','{vcolor2}')]
+			#diffarr@py = (plotdata[labels[1][0]] - plotdata[labels[0][0]])/plotdata[labels[0][0]]
+			diffarr@py = (plotdata[labels[0][0]] - plotdata[labels[1][0]])/plotdata[labels[0][0]]
+			idxarr@py = numpy.argsort(diffarr)
+			sorteddiffarr@py = diffarr[idxarr]
+			speeddown@py = numpy.argmax(sorteddiffarr > -0.05)
+			speedup@py = numpy.argmax(sorteddiffarr > 0.05)
+			sortedxlabels@py = xlabels[idxarr]
+			sortednovec@py = plotdata[labels[0][0]][idxarr]
+			sortedvec@py = plotdata[labels[1][0]][idxarr]
+			nspeedup@py = nloops-speedup
+			nspeeddown@py = speeddown
+			nspeedsame@py = speedup - speeddown
 			mpl = plotmpl.py --pdf "'vectest_arm_sorted_{vlen}.pdf'" --no-show
 				-t "'ARM HPC Compiler Version 19.0 VECTORIZATION TEST RESULT on Cortex-A72 of Cavium(Amazon EC2)\nTEST SUITE FOR VECTORIZING COMPILERS Version 3.0', fontsize=fontsize"
 				--pyplot "'SORTED BY SPEED-UPS (VECTOR LENGTH = {vlen})', y=0.85, fontsize=fontsize@suptitle"
+				--pyplot "x=speeddown@axvline"
+				--pyplot "x=speedup@axvline"
+				--pyplot "speeddown/float(nloops)-0.05, 0.6, 'SPEED-DOWN ({nspeeddown} / {nloops})', fontsize=fontsize@figtext"
+				--pyplot "(speedup+speeddown)/float(2*nloops)-0.05, 0.6, 'ABOUT THE SAME ({nspeedsame} / {nloops})', fontsize=fontsize@figtext"
+				--pyplot "speedup/float(nloops), 0.6, 'SPEED-UP ({nspeedup} / {nloops})', fontsize=fontsize@figtext"
 				--legend "labels=tuple(l for p,l,c in labels), fontsize=fontsize"
 				-f "figsize=[27, 9]"
-				-x "xlabels, rotation=90@ticklabels"
+				-x "sortedxlabels, rotation=90@ticklabels"
 				-x "x@ticks"
 				-x "'LOOP', fontsize=fontsize@label"
 				-y "'TIME TO RUN THE LOOP(SECONDS)', fontsize=fontsize@label"
-				-p "x-w+s, plotdata[labels[0][0]], w, color=labels[0][2]@bar"
-				-p "x+s, plotdata[labels[1][0]], w, color=labels[1][2]@bar"
+				-p "x-w+s, sortednovec, w, color=labels[0][2]@bar"
+				-p "x+s, sortedvec, w, color=labels[1][2]@bar"
 		[end]
