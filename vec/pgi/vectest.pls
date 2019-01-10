@@ -74,7 +74,7 @@ numpy
 		labels@py = [('novec10','novec10','red'), ('vec10','vec10','pink'), ('novec100','novec100','blue'),
 				('vec100','vec100','lightblue'), ('novec1000','novec1000','green'), ('vec1000','vec1000','lightgreen')]
 		mpl = plotmpl.py --pdf "'vectest_intel.pdf'" --no-show
-			-t "'INTEL IFORT Compiler Version 17.0 VECTORIZATION TEST RESULT on INTEL E5-2697:Broadwell (Cheyenne, NCAR)\nTEST SUITE FOR VECTORIZING COMPILERS Version 3.0', fontsize=fontsize"
+			-t "'NVIDIA PGFORTRAN Compiler Version 17.9-0 VECTORIZATION TEST RESULT on INTEL E5-2697:Broadwell (Cheyenne, NCAR)\nTEST SUITE FOR VECTORIZING COMPILERS Version 3.0', fontsize=fontsize"
 			--pyplot "'ALL RESULTS COMBINED ( NUMBER OF THE LOOPS = {}', y=0.8, fontsize=fontsize@suptitle"
 			--legend "labels=tuple(l for p,l,c in labels), fontsize=fontsize"
 			-f "figsize=[27, 9]"
@@ -110,7 +110,7 @@ numpy
 			nspeeddown@py = speeddown
 			nspeedsame@py = speedup - speeddown
 			mpl = plotmpl.py --pdf "'vectest_intel_sorted_{vlen}.pdf'" --no-show
-			    -t "'INTEL IFORT Compiler Version 17.0 VECTORIZATION TEST RESULT on INTEL E5-2697:Broadwell (Cheyenne, NCAR)\nTEST SUITE FOR VECTORIZING COMPILERS Version 3.0', fontsize=fontsize"
+			    -t "'NVIDIA PGFORTRAN Compiler Version 17.9-0 VECTORIZATION TEST RESULT on INTEL E5-2697:Broadwell (Cheyenne, NCAR)\nTEST SUITE FOR VECTORIZING COMPILERS Version 3.0', fontsize=fontsize"
 				--pyplot "'SORTED BY SPEED-UPS (VECTOR LENGTH = {vlen})', y=0.85, fontsize=fontsize@suptitle"
 				--pyplot "x=speeddown@axvline"
 				--pyplot "x=speedup@axvline"

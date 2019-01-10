@@ -15,27 +15,7 @@ class PlotMPLTask(pyloco.PylocoTask):
         This task makes the simple plotting easier and
         provides useful utilities for the complex-plotting 
     """
-    def __init__(self):
-
-        try:
-            import matplotlib
-            import matplotlib.pyplot
-            self.env["matplotlib"] = self.env["mpl"] = matplotlib
-            self.env["pyplot"] = self.env["plt"] = matplotlib.pyplot
-        except ImportError as err:
-            raise
-
-        try:
-            import numpy
-            self.env["numpy"] = self.env["np"] = numpy
-        except ImportError as err:
-            pass
-
-        try:
-            import pandas
-            self.env["pandas"] = self.env["pd"] = pandas
-        except ImportError as err:
-            pass
+    def __init__(self, parent):
 
         self.add_data_argument("data", metavar="data", evaluate=True, nargs="*",
                 help="input data for plotting.")
@@ -83,6 +63,26 @@ class PlotMPLTask(pyloco.PylocoTask):
 
 
     def perform(self, targs):
+
+        try:
+            import matplotlib
+            import matplotlib.pyplot
+            self.env["matplotlib"] = self.env["mpl"] = matplotlib
+            self.env["pyplot"] = self.env["plt"] = matplotlib.pyplot
+        except ImportError as err:
+            raise
+
+        try:
+            import numpy
+            self.env["numpy"] = self.env["np"] = numpy
+        except ImportError as err:
+            pass
+
+        try:
+            import pandas
+            self.env["pandas"] = self.env["pd"] = pandas
+        except ImportError as err:
+            pass
 
         # pdf setting
         _pdf = None
